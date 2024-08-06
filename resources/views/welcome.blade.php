@@ -21,61 +21,8 @@
         </style>
     </head>
     <body class="antialiased">
+
         @yield('content')
-        {{-- <div class="container mt-4">
-            <form method="POST" action="{{ route('evaluations.store') }}">
-                @csrf
-                <!-- Other form fields -->
-        
-                <div id="questions-container">
-                    <div class="question-group">
-                        <div class="form-group">
-                            <label for="question_1">Question 1</label>
-                            <input type="text" name="questions[0][question]" class="form-control" id="question_1" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="answer_1">Answer 1</label>
-                            <textarea name="questions[0][answer]" class="form-control" id="answer_1" rows="3" required></textarea>
-                        </div>
-                        <button type="button" class="btn btn-danger remove-question">Remove</button>
-                    </div>
-                </div>
-        
-                <button type="button" id="add-question" class="btn btn-primary mt-2">Add Question</button>
-        
-                <button type="submit" class="btn btn-success mt-3">Submit</button>
-            </form>
-        </div>
-         --}}
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                let questionCount = 1;
-        
-                document.getElementById('add-question').addEventListener('click', function () {
-                    questionCount++;
-                    const questionsContainer = document.getElementById('questions-container');
-                    const questionGroup = document.createElement('div');
-                    questionGroup.classList.add('question-group');
-                    questionGroup.innerHTML = `
-                        <div class="form-group">
-                            <label for="question_${questionCount}">Question ${questionCount}</label>
-                            <input type="text" name="questions[${questionCount - 1}][question]" class="form-control" id="question_${questionCount}" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="answer_${questionCount}">Answer ${questionCount}</label>
-                            <textarea name="questions[${questionCount - 1}][answer]" class="form-control" id="answer_${questionCount}" rows="3" required></textarea>
-                        </div>
-                        <button type="button" class="btn btn-danger remove-question">Remove</button>
-                    `;
-                    questionsContainer.appendChild(questionGroup);
-                });
-        
-                document.getElementById('questions-container').addEventListener('click', function (e) {
-                    if (e.target && e.target.classList.contains('remove-question')) {
-                        e.target.parentElement.remove();
-                    }
-                });
-            });
-        </script>
+     
     </body>
 </html>
