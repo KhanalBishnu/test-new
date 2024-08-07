@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container mt-4">
-        <div class="d-flex justify-content-center">
-            <ul class="nav nav-tabs" id="managementTabs" role="tablist">
+    <div class="container mt-5">
+        <div class="d-flex justify-content-center mt-5">
+            <ul class="nav nav-tabs" id="managementTabs" role="tablist mt-5">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="questions-tab" data-toggle="tab" data-target="#questions"
                         type="button" role="tab" aria-controls="questions" aria-selected="true">Questions</button>
@@ -210,7 +210,7 @@
                                             <button class="btn btn-sm btn-danger"
                                                 onclick="deleteSection({{ $section->id }})">Delete</button>
                                             <!-- Add Question Button -->
-                                            <button class="btn btn-primary mb-3" data-toggle="modal"
+                                            <button class="btn btn-sm btn-primary" data-toggle="modal"
                                                 data-target="#addQuestionModal"
                                                 onclick="addQuestionForSection({{ $section->id }})">Add Question</button>
                                         </td>
@@ -254,7 +254,7 @@
             </div>
 
             <!-- Add Question Modal -->
-            <div class="modal fade" id="addQuestionModal" tabindex="-1" aria-labelledby="addQuestionModalLabel"
+            {{-- <div class="modal fade" id="addQuestionModal" tabindex="-1" aria-labelledby="addQuestionModalLabel"
                 aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -281,8 +281,38 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
+            {{-- <div class="modal fade" id="addQuestionModal" tabindex="-1" aria-labelledby="addQuestionModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addQuestionModalLabel">Add Questions</h5>
+                            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="addQuestionForm">
+                                @csrf
+                                <input type="hidden" id="sectionId">
+                                <div class="mb-3">
+                                    <label for="question_ids" class="form-label">Select Questions</label>
+                                    <select name="question_ids[]" id="question_ids" class="select2" multiple="multiple"
+                                        required>
+                                        @foreach ($questions as $question)
+                                            <option value="{{ $question->id }}">{{ $question->question }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Add Questions</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div> --}}
 
+            <!-- Initialize Select2 -->
+
+            <!-- Designations Tab -->
             <!-- Designations Tab -->
             <div class="tab-pane fade" id="designations" role="tabpanel" aria-labelledby="designations-tab">
                 <div class="card shadow-sm border-0">
@@ -295,6 +325,7 @@
                                     <th>Company ID</th>
                                     <th>Name</th>
                                     <th>Sections</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -308,6 +339,11 @@
                                                 {{ $section->name }}<br>
                                             @endforeach
                                         </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info"
+                                                onclick="openAssociateModal({{ $designation->id }})">Associate
+                                                Sections</button>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -315,6 +351,35 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Associate Sections Modal -->
+            <div class="modal fade" id="associateSectionsModal" tabindex="-1"
+                aria-labelledby="associateSectionsModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="associateSectionsModalLabel">Associate Sections</h5>
+                            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="associateSectionsForm">
+                                @csrf
+                                <input type="hidden" id="designationId">
+                                <div class="mb-3">
+                                    <label for="section_ids" class="form-label">Select Sections</label>
+                                    <select name="section_ids[]" id="section_ids" class="form-control" multiple required>
+                                        @foreach ($sections as $section)
+                                            <option value="{{ $section->id }}">{{ $section->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Associate Sections</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -331,8 +396,8 @@
                     <form id="addQuestionForm">
                         @csrf
                         <div class="mb-3">
-                            <label for="question_ids" class="form-label">Select Questions</label>
-                            <select name="question_ids[]" id="question_ids" class="form-control" multiple required>
+                            <label for="question_ids" class="form-label ">Select Questions</label>
+                            <select name="question_ids[]" id="question_ids" class="select2" multiple="multiple">
                                 @foreach ($questions as $question)
                                     <option value="{{ $question->id }}">{{ $question->question }}</option>
                                 @endforeach
@@ -347,8 +412,14 @@
 
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <script>
+        $(document).ready(function() {
+            $('.select2').select2({
+                width: '100%', // Makes the select2 control full-width
+                placeholder: "Select questions",
+                allowClear: true,
+            });
+        });
         let sectionId = null;
         document.addEventListener('DOMContentLoaded', function() {
             var triggerTabList = [].slice.call(document.querySelectorAll('#managementTabs button'))
@@ -441,7 +512,7 @@
             });
         });
 
- 
+
 
         function editSection(id) {
             $.ajax({
@@ -472,8 +543,55 @@
                 });
             }
         }
+
+
+        //for designation case
+        $(document).ready(function() {
+        $('#section_ids').select2({
+            placeholder: "Select Sections",
+            allowClear: true
+        });
+        
+        // Function to open the modal and pre-select sections
+        function openAssociateModal(designationId) {
+            $('#designationId').val(designationId);
+            $.ajax({
+                url: `/designations/${designationId}/edit`,
+                method: 'GET',
+                success: function(response) {
+                    // Clear and set the selected values
+                    $('#section_ids').val(response.selectedSections).trigger('change');
+                    $('#associateSectionsModal').modal('show');
+                },
+                error: function(response) {
+                    alert('An error occurred. Please try again.');
+                }
+            });
+        }
+        
+        // Handle form submission
+        $('#associateSectionsForm').on('submit', function(e) {
+            e.preventDefault();
+            var designationId = $('#designationId').val();
+            var sectionIds = $('#section_ids').val();
+            $.ajax({
+                url: `/designations/${designationId}/associate-sections`,
+                method: 'POST',
+                data: {
+                    _token: $('input[name="_token"]').val(),
+                    section_ids: sectionIds
+                },
+                success: function(response) {
+                    alert('Sections associated successfully');
+                    $('#associateSectionsModal').modal('hide');
+                    location.reload();
+                },
+                error: function(response) {
+                    alert('An error occurred. Please try again.');
+                }
+            });
+        });
+    });
     </script>
-     {{-- data: {
-        _token: "{{ csrf_token() }}"
-    }, --}}
+
 @endsection
