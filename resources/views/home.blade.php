@@ -65,3 +65,35 @@
     
 </div>
 @endsection
+{{-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Nepali Month</title>
+</head>
+<body>
+    <label for="nepali-month">Select Nepali Month:</label>
+    <select id="nepali-month" name="nepali-month">
+        <option value="baishakh">बैशाख</option>
+        <option value="jestha">जेठ</option>
+        <option value="ashadh">आषाढ</option>
+        <option value="shrawan">श्रावण</option>
+        <option value="bhadau">भदौ</option>
+        <option value="ashwin">आश्वयुज</option>
+        <option value="kartik">कातिक</option>
+        <option value="magh">माघ</option>
+        <option value="falgun">फाल्गुन</option>
+        <option value="chait">चैत</option>
+        <option value="gauri">गौरी</option>
+    </select>
+
+    <script>
+        document.getElementById('nepali-month').addEventListener('change', function() {
+            const selectedMonth = this.value;
+            console.log('Selected Nepali Month:', selectedMonth);
+            // You can use the selected month value for further processing
+        });
+    </script>
+</body>
+</html> --}}
