@@ -14,30 +14,52 @@
   <!-- Include Select2 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
+
+
   <!-- Custom CSS -->
   <style>
-      /* .select2-container .select2-selection--multiple {
-          min-height: 38px;
-          border: 1px solid #ced4da;
-          border-radius: 4px;
-          padding: 4px;
-      }
+    .form-section {
+        display: none;
+        opacity: 0;
+        transition: opacity 0.5s ease, transform 0.5s ease;
+    }
 
-      .select2-container--default .select2-selection--multiple .select2-selection__choice {
-          background-color: #007bff;
-          border: 1px solid #007bff;
-          color: #fff;
-          padding: 2px 5px;
-          margin: 2px 2px 2px 0;
-          border-radius: 4px;
-      }
+    .form-section.active {
+        display: block;
+        opacity: 1;
+        transform: translateX(0);
+    }
 
-      .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
-          color: #fff;
-      } */
-  </style>
+    .form-section.entering-from-right {
+        display: block;
+        opacity: 0;
+        transform: translateX(100%);
+    }
+
+    .form-section.entering-from-left {
+        display: block;
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+
+    .form-section.exiting-to-left {
+        display: block;
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+
+    .form-section.exiting-to-right {
+        display: block;
+        opacity: 0;
+        transform: translateX(100%);
+    }
+</style>
+
+
+
+
 </head>
-<body>
+<body style="margin-top: 100px;">
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <a class="navbar-brand" href="#">My App</a>
@@ -75,6 +97,11 @@
  
      <!-- Include Select2 JS -->
      <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+     <script>
+
+
+     </script>
  
 </body>
 </html>
