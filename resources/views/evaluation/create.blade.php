@@ -1,6 +1,100 @@
 @extends('layouts.app')
 
 @section('content')
+    <style>
+        /* Base styles for the custom radio buttons */
+        .custom-radio .form-check-input {
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            border: 2px solid black;
+            background-color: white;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            position: relative;
+            cursor: pointer;
+        }
+
+        /* Styles for when the radio button is checked */
+        .custom-radio .form-check-input:checked {
+            background-color: green;
+            border-color: green;
+        }
+
+        /* The dot inside the checked radio button */
+        .custom-radio .form-check-input:checked::before {
+            content: '';
+            width: 0.75rem;
+            height: 0.75rem;
+            background-color: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Button Styles */
+        .next-btn,
+        .prev-btn {
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 30px;
+            border: none;
+            background: linear-gradient(to right, #4CAF50, #8BC34A);
+            /* Gradient background */
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background 0.3s ease, transform 0.3s ease;
+            outline: none;
+        }
+
+        /* Hover Effect */
+        .next-btn:hover,
+        .prev-btn:hover {
+            background: linear-gradient(to right, #388E3C, #4CAF50);
+            transform: translateY(-3px);
+        }
+
+        /* Active Effect */
+        .next-btn:active,
+        .prev-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Disable button when not allowed to move forward/backward */
+        .next-btn:disabled,
+        .prev-btn:disabled {
+            background: #9E9E9E;
+            cursor: not-allowed;
+        }
+
+        /* Alignment */
+        .next-btn {
+            margin-left: auto;
+        }
+
+        .prev-btn {
+            margin-right: 10px;
+            background: linear-gradient(to right, #FFC107, #FF9800);
+            /* Gradient for Previous button */
+        }
+
+        .prev-btn:hover {
+            background: linear-gradient(to right, #FF9800, #FFC107);
+        }
+
+        /* Make sure the buttons are in the correct place */
+        .card-footer {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 20px 0;
+        }
+    </style>
     <div class="container mt-4">
         <form id="evaluation-form" method="POST" action="{{ route('evaluations.store') }}">
             @csrf
@@ -37,16 +131,38 @@
                             <div class="invalid-feedback">{{ $errors->first('review_of') }}</div>
                         @endif
                     </div>
+                    <div class="form-group">
+                        <label for="review_of">Review Of Year</label>
+                        <input type="number"  name="year" class="form-control" id="year_default_check" value="2081" disabled>
+
+                    </div>
 
                     <div class="form-group">
                         <label for="review_year_month">Review Year Month</label>
-                        <input type="month" name="review_year_month" class="form-control" id="review_year_month"
-                            value="{{ old('review_year_month') }}" required>
+                        <select id="nepali-months" class="month-select form-control" required>
+                            <option value="Baishakh">Baishakh</option>
+                            <option value="Jestha">Jestha</option>
+                            <option value="Ashadh">Ashadh</option>
+                            <option value="Shrawan">Shrawan</option>
+                            <option value="Bhadra">Bhadra</option>
+                            <option value="Ashwin">Ashwin</option>
+                            <option value="Kartik">Kartik</option>
+                            <option value="Mangsir">Mangsir</option>
+                            <option value="Poush">Poush</option>
+                            <option value="Magh">Magh</option>
+                            <option value="Falgun">Falgun</option>
+                            <option value="Chaitra">Chaitra</option>
+                        </select>
                         @if ($errors->has('review_year_month'))
                             <div class="invalid-feedback">{{ $errors->first('review_year_month') }}</div>
                         @endif
                     </div>
 
+                    {{-- <div class="form-group">
+                        <label for="department">date</label>
+                        <input type="text" value="" name="date" class="date-picker form-control" />
+
+                    </div> --}}
                     <div class="form-group">
                         <label for="department">Department</label>
                         <input type="text" name="department" class="form-control" id="department"
@@ -122,52 +238,101 @@
                     <h5>Question Answers</h5>
                 </div>
                 <div class="card-body" id="questions-container">
-                    <div class="question-group mb-4">
-                        <div class="form-group">
-                            <label for="question_1">Question 1</label>
-                            <input type="text" name="question_answers[0][question]" class="form-control"
-                                id="question_1" required>
+                    <div class="question-group mb-4  custom-radio">
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    <label for="question_1">Question 1</label>
+                                    <input type="hidden" name="question_answers[0][question]" class="form-control"
+                                        id="question_1" required>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group d-flex justify-content-between">
+                                    <label for="answer_1">Answer 1</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="question_answers[0][answer]"
+                                            id="answer_1_1" value="1" required>
+                                        <label class="form-check-label" for="answer_1_1">1</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="question_answers[0][answer]"
+                                            id="answer_1_2" value="2" required>
+                                        <label class="form-check-label" for="answer_1_2">2</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="question_answers[0][answer]"
+                                            id="answer_1_3" value="3" required>
+                                        <label class="form-check-label" for="answer_1_3">3</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="question_answers[0][answer]"
+                                            id="answer_1_4" value="4" required>
+                                        <label class="form-check-label" for="answer_1_4">4</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="question_answers[0][answer]"
+                                            id="answer_1_5" value="5" required>
+                                        <label class="form-check-label" for="answer_1_5">5</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="question_answers[0][answer]"
+                                            id="answer_1_na" value="NA" required>
+                                        <label class="form-check-label" for="answer_1_na">NA</label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-
-                        <div class="form-group">
-                            <label for="answer_1">Answer 1</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="question_answers[0][answer]"
-                                    id="answer_1_1" value="1" required>
-                                <label class="form-check-label" for="answer_1_1">1</label>
+                    </div>
+                    <div class="question-group mb-4 custom-radio">
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    <label for="question_1">Question 1</label>
+                                    <input type="hidden" name="question_answers[1][question]" class="form-control"
+                                        id="question_1" required>
+                                </div>
                             </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="question_answers[0][answer]"
-                                    id="answer_1_2" value="2" required>
-                                <label class="form-check-label" for="answer_1_2">2</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="question_answers[0][answer]"
-                                    id="answer_1_3" value="3" required>
-                                <label class="form-check-label" for="answer_1_3">3</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="question_answers[0][answer]"
-                                    id="answer_1_4" value="4" required>
-                                <label class="form-check-label" for="answer_1_4">4</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="question_answers[0][answer]"
-                                    id="answer_1_5" value="5" required>
-                                <label class="form-check-label" for="answer_1_5">5</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="question_answers[0][answer]"
-                                    id="answer_1_na" value="NA" required>
-                                <label class="form-check-label" for="answer_1_na">NA</label>
+                            <div class="col-md-5">
+                                <div class="form-group d-flex justify-content-between">
+                                    <label for="answer_1">Answer 1</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="question_answers[1][answer]"
+                                            id="answer_1_1" value="1" required>
+                                        <label class="form-check-label" for="answer_1_1">1</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="question_answers[1][answer]"
+                                            id="answer_1_2" value="2" required>
+                                        <label class="form-check-label" for="answer_1_2">2</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="question_answers[1][answer]"
+                                            id="answer_1_3" value="3" required>
+                                        <label class="form-check-label" for="answer_1_3">3</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="question_answers[1][answer]"
+                                            id="answer_1_4" value="4" required>
+                                        <label class="form-check-label" for="answer_1_4">4</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="question_answers[1][answer]"
+                                            id="answer_1_5" value="5" required>
+                                        <label class="form-check-label" for="answer_1_5">5</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="question_answers[1][answer]"
+                                            id="answer_1_na" value="NA" required>
+                                        <label class="form-check-label" for="answer_1_na">NA</label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-danger remove-question">Remove</button>
                     </div>
                 </div>
                 <div class="card-footer text-right">
                     <button type="button" class="btn btn-secondary prev-btn">Previous</button>
-                    <button type="button" class="btn btn-primary" id="add-question">Add Question</button>
                     <button type="button" class="btn btn-primary next-btn">Next</button>
                 </div>
             </div>
@@ -201,6 +366,8 @@
             </div>
         </form>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -209,10 +376,11 @@
             var nextButtons = document.querySelectorAll('.next-btn');
             var prevButtons = document.querySelectorAll('.prev-btn');
             var form = document.getElementById('evaluation-form');
-    
+
             function showSection(index, direction) {
                 sections.forEach((section, idx) => {
-                    section.classList.remove('active', 'entering-from-right', 'entering-from-left', 'exiting-to-left', 'exiting-to-right');
+                    section.classList.remove('active', 'entering-from-right', 'entering-from-left',
+                        'exiting-to-left', 'exiting-to-right');
                     if (idx === index) {
                         section.classList.add('active');
                         section.style.display = 'block';
@@ -233,11 +401,11 @@
                     }
                 });
             }
-    
+
             function validateSection(sectionIndex) {
                 var valid = true;
                 var inputs = sections[sectionIndex].querySelectorAll('input, textarea, select');
-    
+
                 inputs.forEach(input => {
                     if (!input.checkValidity()) {
                         input.classList.add('is-invalid');
@@ -247,10 +415,10 @@
                         input.classList.add('is-valid');
                     }
                 });
-    
+
                 return valid;
             }
-    
+
             nextButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     if (validateSection(currentSection)) {
@@ -261,7 +429,7 @@
                     }
                 });
             });
-    
+
             prevButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     if (currentSection > 0) {
@@ -270,19 +438,42 @@
                     }
                 });
             });
-    
+
             showSection(currentSection, 'next');
-    
+
             form.addEventListener('submit', function(event) {
                 if (!validateSection(currentSection)) {
                     event.preventDefault();
                 }
             });
         });
+        $(document).ready(function() {
+            $('input[type="radio"]').change(function() {
+                const name = $(this).attr('name');
+                $('input[name="' + name + '"]').removeClass('is-invalid');
+            });
+            // $('.date-picker').nepaliDatePicker({
+            //     dateFormat: '%D, %M %d, %y',
+            //     closeOnDateSelect: true,
+            //     minDate: 'सोम, जेठ १०, २०७३',
+            //     //   maxDate: 'मंगल, जेठ ३२, २०७३'
+            // });
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize NepaliDate object
+            const nd = new NepaliDate();
+            debugger
+            const monthNames = [
+                'Baishakh', 'Jestha', 'Ashadh', 'Shrawan', 'Bhadra',
+                'Ashwin', 'Kartik', 'Mangsir', 'Poush', 'Magh', 'Falgun', 'Chaitra'
+            ];
+            // Get the current Nepali month name
+            const currentNepaliMonth = nd.getMonth();
+
+            // Set the default selected month
+            const monthSelect = document.getElementById('nepali-months');
+            monthSelect.value = monthNames[currentNepaliMonth];
+            document.getElementById('year_default_check').innerHTML(nd.getYear())
+        });
     </script>
-    
-    
-    
-    
-    
 @endsection
